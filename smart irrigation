@@ -1,0 +1,28 @@
+#include <ESP8266WiFi.h>
+
+// Replace with your network credentials
+const char* ssid = "YOUR_SSID";
+const char* password = "YOUR_PASSWORD";
+
+// Configuration for sensors and actuator
+const int sensorPin = A0; 
+const int pumpPin = D1; 
+const int threshold = 500; // Adjust for soil moisture
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(pumpPin, OUTPUT);
+  digitalWrite(pumpPin, LOW); // Initially off
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) delay(500);
+}
+
+void loop() {
+  // Read sensor and actuate pump if needed
+  if (analogRead(sensorPin) < threshold) {
+    digitalWrite(pumpPin, HIGH); 
+    delay(5000); // Water for 5 seconds
+    digitalWrite(pumpPin, LOW);
+  }
+  delay(60000); // Check every minute
+}
